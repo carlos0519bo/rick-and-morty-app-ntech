@@ -1,14 +1,14 @@
 import {
   Image,
   StyleSheet,
-  TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { router } from 'expo-router';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 
-export const Header = () => {
+export const HomeHeader = () => {
   const { top } = useSafeAreaInsets();
 
   return (
@@ -31,20 +31,11 @@ export const Header = () => {
       />
 
       <View style={styles.searchContainer}>
-        <TextInput
-          placeholder="Search..."
-          style={{
-            backgroundColor: '#fff',
-            paddingHorizontal: 20,
-            paddingVertical: 10,
-            borderRadius: 20,
-            width: '100%',
-            borderColor: '#40b5cb',
-            borderWidth: 1,
-          }}
-        />
-        <TouchableOpacity style={styles.icon}>
-          <FontAwesome name="search" size={15} color="#40b5cb" />
+        <TouchableOpacity
+          onPress={() => router.push('/search')}
+          style={styles.icon}
+        >
+          <FontAwesome name="search" size={22} color="#40b5cb" />
         </TouchableOpacity>
       </View>
     </View>

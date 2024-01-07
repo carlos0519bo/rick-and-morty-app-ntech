@@ -1,3 +1,4 @@
 export * from './characterCard';
-export * from './header';
+export * from './fadeInImage';
+export * from './headers';
 export * from './loader';

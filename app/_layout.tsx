@@ -1,19 +1,34 @@
 import { Stack } from 'expo-router';
-import { Header } from '../components';
+import { HomeHeader } from '../components';
 
 const RootLayout = () => {
   return (
-    <Stack>
+    <Stack
+      screenOptions={{
+        contentStyle: {
+          backgroundColor: '#fff',
+        },
+      }}
+    >
       <Stack.Screen
         name="index"
         options={{
-          header: () => <Header />,
-          contentStyle: {
-            backgroundColor: '#fff',
-          },
+          header: () => <HomeHeader />,
         }}
       />
-      <Stack.Screen name="character/[id]" options={{ headerShown: false }} />
+      <Stack.Screen
+        name="character/[id]"
+        options={{ headerShown: false, animation: 'fade' }}
+      />
+      <Stack.Screen
+        name="search"
+        options={{
+          headerShown: false,
+          gestureDirection: 'vertical',
+          gestureEnabled: false,
+          animation: 'fade_from_bottom',
+        }}
+      />
     </Stack>
   );
 };

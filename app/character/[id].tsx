@@ -1,21 +1,10 @@
-import {
-  router,
-  useGlobalSearchParams,
-  useLocalSearchParams,
-  useRouter,
-} from 'expo-router';
-import {
-  Image,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-import Octicons from '@expo/vector-icons/Octicons';
+import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { router, useLocalSearchParams } from 'expo-router';
+import Octicons from '@expo/vector-icons/Octicons';
 import { Loader } from '../../components';
 import { useCharacter } from '../../hooks';
+import { formatDate } from '../../utils';
 
 const Character = () => {
   const { top } = useSafeAreaInsets();
@@ -31,10 +20,29 @@ const Character = () => {
     origin,
     location,
     image,
-    episode,
-    url,
     created,
-  } = character || {};
+  } = character;
+
+  const characterInfo = [
+    { label: 'Origin', value: origin?.name },
+    { label: 'Gender', value: gender },
+    { label: 'Species', value: species },
+    { label: 'Type', value: type },
+    { label: 'Status', value: status },
+    { label: 'Location', value: location?.name },
+    { label: 'Created', value: formatDate(created) },
+  ];
+
+  const statusColor = () => {
+    let color = 'gray';
+    if (status === 'Dead') {
+      return (color = 'red');
+    } else if (status === 'Alive') {
+      return (color = '#2ECC71');
+    } else {
+      return color;
+    }
+  };
 
   if (isLoading)
     return (
@@ -44,52 +52,50 @@ const Character = () => {
     );
 
   return (
-    <View>
-      <View style={styles.container}>
+    <View style={{ paddingHorizontal: 20 }}>
+      <View style={{ ...styles.imageContainer, marginTop: top + 20 }}>
         <Image
           source={{ uri: image }}
-          style={styles.image}
+          style={{
+            ...styles.image,
+            borderColor: statusColor(),
+          }}
           resizeMode="cover"
         />
-        <TouchableOpacity
-          onPress={() => router.back()}
-          style={{ ...styles.backButton, top: top + 5 }}
+        <View
+          style={[styles.statusContainer, { backgroundColor: statusColor() }]}
         >
-          <Octicons name="arrow-left" size={32} color="white" />
-        </TouchableOpacity>
-        {status !== 'unknown' && (
-          <View
-            style={[
-              styles.statusContainer,
-              status === 'Dead'
-                ? { backgroundColor: 'red' }
-                : { backgroundColor: '#2ECC71' },
-            ]}
+          <Text
+            style={{
+              fontSize: 20,
+              color: 'white',
+              fontWeight: 'bold',
+            }}
           >
-            <Text
-              style={{
-                fontSize: 20,
-                color: 'white',
-                fontWeight: 'bold',
-              }}
-            >
-              {status}
-            </Text>
-          </View>
-        )}
-      </View>
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <View style={styles.infoCharacterContainer}>
-          <Text style={styles.name}>{name}</Text>
-          <Text>Origin: {origin?.name}</Text>
-          <Text>Gendre: {gender}</Text>
-          <Text>Species: {species}</Text>
-          <Text>Type: {type}</Text>
-          <Text>Status: {status}</Text>
-          <Text>Episodes: {episode?.length}</Text>
-          <Text>Location: {location?.name}</Text>
+            {status}
+          </Text>
         </View>
-      </ScrollView>
+        <View>
+          <Text style={styles.name} adjustsFontSizeToFit numberOfLines={2}>
+            {name}
+          </Text>
+        </View>
+      </View>
+      <TouchableOpacity
+        onPress={() => router.back()}
+        style={{ ...styles.backButton, top: top + 20 }}
+      >
+        <Octicons name="arrow-left" size={32} color="#40b5cb" />
+      </TouchableOpacity>
+
+      <View style={{ marginTop: 20 }}>
+        {characterInfo.map(({ label, value }) => (
+          <View key={label} style={styles.infoCharacter}>
+            <Text style={styles.label}>{label}</Text>
+            <Text style={styles.value}> {value}</Text>
+          </View>
+        ))}
+      </View>
     </View>
   );
 };
@@ -97,37 +103,59 @@ const Character = () => {
 export default Character;
 
 const styles = StyleSheet.create({
-  container: {
-    height: 400,
-    backgroundColor: '#40b5cb',
+  imageContainer: {
     borderBottomRightRadius: 100,
     borderBottomLeftRadius: 100,
+    justifyContent: 'center',
+    flexDirection: 'column',
+    alignItems: 'center',
   },
   backButton: {
     position: 'absolute',
-    left: 20,
+    left: 22,
   },
   image: {
-    width: '100%',
-    height: '100%',
-    position: 'absolute',
-  },
-  infoCharacterContainer: {
-    padding: 20,
+    width: 240,
+    height: 240,
+    borderRadius: 120,
+    borderWidth: 5,
+    marginBottom: 5,
   },
   name: {
-    fontSize: 50,
-    fontWeight: '500',
+    fontSize: 45,
+    fontWeight: '300',
     color: '#40b5cb',
     textShadowColor: 'rgba(0, 0, 0, 0.75)',
     textShadowOffset: { width: -1, height: 1 },
     textShadowRadius: 2,
+    textAlign: 'center',
   },
   statusContainer: {
-    position: 'absolute',
-    bottom: 20,
-    right: 30,
-    padding: 10,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
     borderRadius: 10,
+  },
+  portalImage: {
+    width: 280,
+    height: 280,
+  },
+  infoCharacter: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 7,
+    backgroundColor: '#D6EAF8',
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 10,
+  },
+  label: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#2C3E50',
+  },
+  value: {
+    fontSize: 16,
+    color: '#2C3E50',
   },
 });

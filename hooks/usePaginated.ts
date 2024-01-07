@@ -6,11 +6,10 @@ export const usePaginated = () => {
   const [characterList, setCharacterList] = useState<Character[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  const nextPageURL = useRef(
-    'https://rickandmortyapi.com/api/character/?page=1'
-  );
+  const nextPageURL = useRef('/?page=1');
 
   const loadCharacters = async () => {
+    setIsLoading(true);
     const resp = await rickAndMortyApi.get<GetCharacterResponse>(
       nextPageURL.current
     );
@@ -24,8 +23,8 @@ export const usePaginated = () => {
   }, []);
 
   return {
+    loadCharacters,
     characterList,
     isLoading,
-    loadCharacters
   };
 };

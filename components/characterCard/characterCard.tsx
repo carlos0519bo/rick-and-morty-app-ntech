@@ -1,11 +1,4 @@
-import {
-  Dimensions,
-  Image,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { Dimensions, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { router } from 'expo-router';
 import { Character } from '../../types/index';
 import { FadeInImage } from '../fadeInImage';
@@ -16,26 +9,28 @@ interface Props {
   character: Character;
 }
 export const CharacterCard = ({ character }: Props) => {
+  const handlePressRouter = () => {
+    router.push({
+      pathname: `character/${character.id}`,
+      params: { id: character.id },
+    });
+  };
+
   return (
     <TouchableOpacity
       activeOpacity={0.8}
-      onPress={() =>
-        router.push({
-          pathname: `character/${character.id}`,
-          params: { id: character.id },
-        })
-      }
+      onPress={handlePressRouter}
+      style={{ ...styles.container, width: windowWidth * 0.4 }}
     >
-      <View style={{ ...styles.container, width: windowWidth * 0.4 }}>
-        <FadeInImage uri={character.image} style={styles.image} />
-        <Text style={styles.name}>{character.name}</Text>
-      </View>
+      <FadeInImage uri={character.image} style={styles.image} />
+      <Text style={styles.name}>{character.name}</Text>
     </TouchableOpacity>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
+    backgroundColor: 'white',
     marginHorizontal: 10,
     height: 120,
     width: 150,
@@ -60,12 +55,12 @@ const styles = StyleSheet.create({
   },
   name: {
     color: 'white',
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: 'bold',
-    left: 10,
+    left: 4,
     marginBottom: 10,
     textShadowColor: 'rgba(0, 0, 0, 0.75)',
     textShadowOffset: { width: -1, height: 1 },
-    textShadowRadius: 10,
+    textShadowRadius: 3,
   },
 });

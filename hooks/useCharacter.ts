@@ -7,9 +7,7 @@ export const useCharacter = (id: number = -1) => {
   const [isLoading, setIsLoading] = useState(true);
 
   const loadCharacter = async () => {
-    const { data } = await rickAndMortyApi.get<Character>(
-      `https://rickandmortyapi.com/api/character/${id}`
-    );
+    const { data } = await rickAndMortyApi.get<Character>(`/${id}`);
     setCharacter(data);
     setIsLoading(false);
   };
