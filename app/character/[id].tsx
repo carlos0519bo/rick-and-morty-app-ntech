@@ -9,7 +9,7 @@ import { formatDate } from '../../utils';
 const Character = () => {
   const { top } = useSafeAreaInsets();
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { character, isLoading } = useCharacter(Number(id));
+  const { character, isLoading } = useCharacter(id);
 
   const {
     name,

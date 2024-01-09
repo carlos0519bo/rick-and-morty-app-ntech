@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Character } from '../types';
 import { rickAndMortyApi } from '../api/rickAndMortyApi';
 
-export const useCharacter = (id: number = -1) => {
+export const useCharacter = (id:string = '-1') => {
   const [character, setCharacter] = useState<Character>({} as Character);
   const [isLoading, setIsLoading] = useState(true);
 
